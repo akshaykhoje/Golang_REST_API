@@ -25,9 +25,9 @@ func getTodos(context *gin.Context) {
 	context.IndentedJSON(http.StatusOK, todos)
 }
 
-// func displayRoot(context *gin.Context) {
-// 	context.IndentedJSON(http.StatusOK, "Hello World\n")
-// }
+func displayRoot(context *gin.Context) {
+	context.IndentedJSON(http.StatusOK, "Hello World")
+}
 
 // receive client-data in JSON and convert it to `todo` datatype
 func addTodo(context *gin.Context) {
@@ -51,6 +51,18 @@ func getTodo(context *gin.Context) {
 	context.IndentedJSON(http.StatusOK, todo)
 }
 
+// update a particular todo by ID using PATCH request
+func toggleTodoStatus(context *gin.Context) {
+	id := context.Param("id")
+	todo, err := getTodoById(id)
+
+	if err != nil {
+		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "Todo not found"})
+	}
+	todo.Completed = !todo.Completed // toggles the boolean
+	context.IndentedJSON(http.StatusOK, todo)
+}
+
 func getTodoById(id string) (*todo, error) {
 	for i, t := range todos {
 		if t.ID == id {
@@ -62,9 +74,10 @@ func getTodoById(id string) (*todo, error) {
 
 func main() {
 	router := gin.Default()
-	// router.GET("/", displayRoot)
+	router.GET("/", displayRoot)
 	router.GET("/todos", getTodos)
 	router.GET("/todos/:id", getTodo) // the ':' tells that field is dynamic and is called as 'id' here
+	router.PATCH("todos/:id", toggleTodoStatus)
 	router.POST("/todos", addTodo)
 	router.Run("localhost:9090")
 
