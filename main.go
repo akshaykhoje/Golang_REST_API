@@ -73,7 +73,15 @@ func getTodoById(id string) (*todo, error) {
 }
 
 func main() {
+	// set the GIN_MODE to "release" - disables warnings
+	gin.SetMode(gin.ReleaseMode)
+
+	// create a new Gin router
 	router := gin.Default()
+
+	// disable trusting all proxies
+	router.ForwardedByClientIP = false
+
 	router.GET("/", displayRoot)
 	router.GET("/todos", getTodos)
 	router.GET("/todos/:id", getTodo) // the ':' tells that field is dynamic and is called as 'id' here
