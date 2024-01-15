@@ -11,8 +11,7 @@ RUN adduser -D -u 1000 definitely_not_root
 RUN apk update && \
     apk upgrade && \
     apk add --no-cache \
-        curl \
-        git
+        curl
 
 # Download and install Go 1.21.6
 RUN curl -sSL https://dl.google.com/go/go1.21.6.linux-amd64.tar.gz | tar -C /usr/local -xz
