@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -82,11 +83,15 @@ func main() {
 	// disable trusting all proxies
 	router.ForwardedByClientIP = false
 
+	if router != nil {
+		fmt.Println("************************\nYou have started your REST API...\n************************")
+	}
+
 	router.GET("/", displayRoot)
 	router.GET("/todos", getTodos)
 	router.GET("/todos/:id", getTodo) // the ':' tells that field is dynamic and is called as 'id' here
 	router.PATCH("todos/:id", toggleTodoStatus)
 	router.POST("/todos", addTodo)
-	router.Run("localhost:9090")
+	router.Run("0.0.0.0:80") // change it to localhost:port to run locally without docker
 
 }
